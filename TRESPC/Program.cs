@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +17,7 @@ namespace TRESPC
             List<Livros> listaLivros = new List<Livros>();
             do
             {
+             
                 Console.Clear();
                 Console.WriteLine("Livrarias Unibrasil - Área Administrativa");
                 Console.WriteLine($"Atualmente temos {listaLivros.Count} livros cadastrados");
@@ -23,6 +26,8 @@ namespace TRESPC
                 Console.WriteLine("3 - Excluir");
                 Console.WriteLine("4 - Listar");
                 Console.WriteLine("5 - Pesquisar");
+                Console.WriteLine("6 - Exportar Arquivo.json");
+                Console.WriteLine("7 - Importar Arquivo.json");
                 Console.WriteLine("9 - Sair");
                 Console.WriteLine("Digite a sua opção: ");
                 String opc = Console.ReadLine();
@@ -182,8 +187,29 @@ namespace TRESPC
                         }
                         break;
 
+                    //EXPORTANDO PARA ARQUIVO JSON
+                    case "6":
+
+                        var jsonString = Newtonsoft.Json.JsonConvert.SerializeObject(listaLivros);
+                        System.IO.File.WriteAllText(@"H:\lista.json", jsonString); //TENTAR FAZER CAMINHO N FIXADO MAIS TARDE
+                        Console.WriteLine("Arquivo exportado com sucesso");
+                        CounterToMenu();
+
+                        break;
+
+                    //IMPORTANDO PARA ARQUIVO JSON
+                    case "7":
+
+                        using (StreamReader r = new StreamReader(@"H:\lista.json")) //TENTAR FAZER CAMINHO N FIXADO MAIS TARDE
+                        {
+                            string json = r.ReadToEnd();
+                            listaLivros = JsonConvert.DeserializeObject<List<Livros>>(json);
+                        }
+                        break;
+
                     case "9":
-                        Console.Write("Saindo");
+
+                        Console.WriteLine("Saindo");
                         CounterToMenu();
                         continua = false;
                         break;
